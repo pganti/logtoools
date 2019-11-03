@@ -1,0 +1,61 @@
+.TH "clfsplit" "1" "0.06" "Russell Coker <russell@coker.com.au>" "logtools"
+.SH "NAME"
+clfsplit \- split Common\-Log Format web logs based on IP address
+
+.SH "SYNOPSIS"
+.B clfsplit [\-\-help] [\-i input] \-d defaultfile \-f file \-s spec [\-f file \-s spec]
+
+.SH "DESCRIPTION"
+The
+.B clfsplit
+will split up large CLF format web logs based on IP address.  This is for
+creating separate log analysis passes for internal and external users of web
+pages.
+
+.SH "OVERVIEW"
+The
+.B 
+defaultfile
+parameter specifies where data goes if it doesn't match any of the IP ranges.
+This could be /dev/null depending on your aims.
+.P
+The
+.B \-i input
+parameter gives the file to take input from (default standard input).
+.P
+The
+.B \-f file
+parameter must be given before the list of IP addresses.
+.P
+The
+.B spec
+parameter is the IP addresses that go to the file in question.  It is of the
+form
+.B start[\-end][:start[\-end]]
+where start and end specify the start and ends of ranges of IPs.  Also the
+.B CIDR
+notation can be used or a single IP address.
+If there is a large number of IP ranges then a file name can be given which
+contains a set of IP ranges, one range per line.
+
+.SH "EXIT STATUS"
+.B 0
+No errors
+.P
+.B 1
+Bad parameters
+.P
+.B 2
+Can't open input
+.P
+.B 3
+Can't open/write to output file
+.P
+.B 4
+Can't open and read from spec file
+.SH "AUTHOR"
+This program, its manual page, and the Debian package were written by
+Russell Coker <russell@coker.com.au>.
+
+.SH "SEE ALSO"
+.BR clfmerge (1), clfdomainsplit (1)

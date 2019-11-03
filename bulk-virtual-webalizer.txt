@@ -1,0 +1,112 @@
+I have:
+APACHE_POST_SCRIPT=/usr/local/sbin/runallweblogs
+
+Also to have log data from multiple domains in the one log file you need a
+statement like the following in httpd.conf to save the target domain name at
+the start of the line:
+LogFormat "%V %h %l %u %t \"%r\" %s %b \"%{Referer}i\" \"%{User-agent}i\" %T"
+
+Also you need to load the vhost_alias module:
+LoadModule vhost_alias_module /usr/lib/apache/1.3/mod_vhost_alias.so
+You will need to specify which interface to listen on with a Listen directive,
+and have something similar to the following for re-writing cgi-bin and
+specifying the virtual document root:
+RewriteEngine on
+RewriteRule  /cgi-bin/(.*)    /cgi-bin/cgiwrap/%{HTTP_HOST}/$1 [PT]
+VirtualDocumentRoot /home/hosting/%-1/%-2/%-3/%-4+
+VirtualScriptAlias /home/hosting/%-1/%-2/%-3/%-4+
+UseCanonicalName Off
+
+/usr/local/sbin/runallweblogs has the following contents:
+---
+#!/bin/sh
+ 
+/etc/init.d/apache reload
+
+ROOTS="/home/chroot/asp /home/chroot/php4"
+for n in $ROOTS ; do
+## First we run the apache logrotate script inside each chroot environment
+  chroot $n /etc/cron.daily/apache
+## Then we add its log file to the list.
+  OTH_INPUT="$OTH_INPUT $n/var/log/apache/access.log.1"
+done
+export OTH_INPUT
+/usr/local/sbin/runweblogs
+---
+Edit the /etc/logrotate.d/apache file to run /usr/local/sbin/runallweblogs
+instead of "/etc/init.d/apache reload".
+
+Alternatively if you don't have a chroot environment then you can have
+logrotate call /usr/local/sbin/runweblogs, in which case you need the
+apache reload in there.
+
+---
+
+The ROOTS variable has the directory names of the chroot environments I use for
+strange web setups.
+
+/usr/local/sbin/runweblogs is separate so that I can easily interrupt things
+and re-start them manually half way through if necessary, there's nothing
+preventing you from combining them into one script.
+
+/usr/local/sbin/runweblogs has the following contents:
+---
+#!/bin/bash -e
+ 
+INPUT=/var/log/apache/access.log.1
+MANGLE=/var/log/apache/mangled.log
+SPLITDIR=/var/log/apache/split
+ 
+## clfmerge -d will merge the logs
+clfmerge -d $INPUT $OTH_INPUT >> $MANGLE
+## Run webazolver to do DNS lookups on the log file with
+## target domains merged in.
+webazolver -N30 < $MANGLE &
+if [ ! -d $SPLITDIR ]; then
+  mkdir $SPLITDIR
+fi
+cd $SPLITDIR
+ 
+## while webazolver is running we split the log file into one file per domain
+clfdomainsplit -o $SPLITDIR < $MANGLE &
+## wait for webazolver to finish (it takes ages)
+wait
+ 
+ 
+if [ ! -d /var/log/apache/webstats/all ]; then
+  mkdir /var/log/apache/webstats/all
+fi
+## Run webalizer on all virtual web servers to give an overview of what the
+## entire ISP traffic is.
+webalizer -o /var/log/apache/webstats/all -t "All ISP customers" < $MANGLE
+rm $MANGLE
+## Now do the per domain processing from a Perl script.
+/usr/local/sbin/process_logs.pl
+---
+
+Here's the contents of /usr/local/sbin/process_logs.pl:
+---
+#!/usr/bin/perl
+use strict;
+ 
+# expects to find CLF logs in the current directory where each log file name
+# is the name of the domain it belongs to.
+ 
+my @files = `ls -1`;
+ 
+foreach my $file (@files)
+{
+  chomp $file;
+  my $outputdir = "/var/log/apache/webstats/$file";
+  mkdir($outputdir, 0775);
+  if(system("webalizer -o $outputdir -t $file -n $file -r $file/ < $file") ==
+0)
+  {
+    unlink($file) == 1 or printf(STDERR "Can't remove file $file.\n");
+  }
+  else
+  {
+    printf(STDERR "Error running webalizer!\n");
+  }
+}
+---

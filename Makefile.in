@@ -1,0 +1,35 @@
+
+prefix=@prefix@
+WFLAGS=-Wall -W -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wcast-qual -Woverloaded-virtual -pedantic -ffor-scope
+CFLAGS=-O2 -g -DNDEBUG ${WFLAGS}
+CXX=@CXX@ ${CFLAGS}
+LFLAGS=-lstdc++ @extra_ldflags@
+
+INSTALL=@INSTALL@
+
+EXES=clfmerge logprn funnel clfsplit clfdomainsplit
+MAN1=clfmerge.1 logprn.1 funnel.1 clfsplit.1 clfdomainsplit.1
+
+all: $(EXES)
+
+%: %.cpp
+	$(CXX) $< -o $@ ${LFLAGS}
+
+install-bin: ${EXES}
+	mkdir -p ${prefix}/bin
+	@INSTALL_PROGRAM@ @stripping@ ${EXES} ${prefix}/bin
+
+install: install-bin
+	mkdir -p @mandir@/man1 @mandir@/man8
+	@INSTALL_DATA@ ${MAN1} @mandir@/man1
+	mkdir -p @sysconfdir@
+	@INSTALL_DATA@ clfdomainsplit.cfg @sysconfdir@
+
+clean:
+	rm -f $(EXES) build-stamp install-stamp
+	rm -rf debian/tmp core debian/*.debhelper
+	rm -f debian/{substvars,files} config.log
+
+realclean: clean
+	rm -f configure-stamp config.* Makefile sun/pkginfo logtools.h
+

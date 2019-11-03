@@ -1,0 +1,139 @@
+logtools (0.13d) unstable; urgency=low
+
+  * Merged changes from NMU and fixed some more GCC 4.3 warnings.
+
+ -- Russell Coker <russell@coker.com.au>  Fri, 06 Jun 2008 15:34:35 +1000
+
+logtools (0.13c+nmu1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix FTBFS with GCC 4.3 (Closes: #417376).
+
+ -- Luk Claes <luk@debian.org>  Sun, 09 Mar 2008 17:03:20 +0000
+
+logtools (0.13c) unstable; urgency=low
+
+  * Made it compile with GCC 3.2.
+
+ -- Russell Coker <russell@coker.com.au>  Fri, 25 Apr 2003 17:09:00 +1000
+
+logtools (0.13b) unstable; urgency=low
+
+  * Improved documentation that matches how things work in sarge.
+
+ -- Russell Coker <russell@coker.com.au>  Sun,  1 Sep 2002 15:43:00 +0200
+
+logtools (0.13a) unstable; urgency=LOW
+
+  * Made clfdomainsplit support URLs with the port number.
+
+ -- Russell Coker <russell@coker.com.au>  Sun,  2 Dec 2001 23:58:00 +0100
+
+logtools (0.13) unstable; urgency=LOW
+
+  * Made it work with GCC 3.x.
+    Closes: #121284
+
+ -- Russell Coker <russell@coker.com.au>  Mon, 26 Nov 2001 21:46:00 +0100
+
+logtools (0.12b) unstable; urgency=LOW
+
+  * Fixed some minor documentation bugs, mainly related to funnel.
+    Closes: #112883
+
+ -- Russell Coker <russell@coker.com.au>  Thu, 20 Sep 2001 15:40:02 +0200
+
+logtools (0.12a) unstable; urgency=LOW
+
+  * Fixed header file errors on funnel for hppa.
+    Closes: #104730
+
+ -- Russell Coker <russell@coker.com.au>  Sat, 14 Jul 2001 20:04:55 +0200
+
+logtools (0.12) unstable; urgency=LOW
+
+  * clfmerge -d now converts domain names to lower case.
+
+  * clfdomainsplit now converts all domain names to lower case internally
+    (for sorting and matching purposes), it still exposes upper-case domains
+    on its output.
+
+ -- Russell Coker <russell@coker.com.au>  Wed, 11 Jul 2001 17:09:00 +0200
+
+logtools (0.11) unstable; urgency=LOW
+
+  * Made the "-d" option of clfmerge handle a URL that doesn't contain any '/'
+    characters.
+
+ -- Russell Coker <russell@coker.com.au>  Tue, 12 Jun 2001 11:58:49 +0200
+
+logtools (0.10) unstable; urgency=MEDIUM
+
+  * Made clfdomainsplit handle IP addresses and send them to the default file
+    (first code to actually use the default file).
+
+  * Fixed clfmerge so that the -d option will not mess with a URL that is
+    already fully qualified (checks for "http://" at the start).
+
+ -- Russell Coker <russell@coker.com.au>  Thu, 7 Jun 2001 23:49:55 +0200
+
+logtools (0.08) unstable; urgency=MEDIUM
+
+  * Made clfdomainsplit easier to hack (the base code could be used for
+    splitting any text file if 3 small functions are changed).
+
+  * Make clfdomainsplit use multiple processes to solve file handle limits,
+    this code isn't yet tested...
+
+ -- Russell Coker <russell@coker.com.au>  Mon, 8 May 2001 13:50:29 +0200
+
+logtools (0.07) unstable; urgency=MEDIUM
+
+  * Updated the description with more content and fixed some formatting issues.
+    Closes: #78976
+
+  * Made it clean the config.cache file (and other config data) before
+    packaging the source.
+    Closes: #96290
+
+  * Fixed a bug where clfmerge would output the last line twice if there was
+    only a single log file and buffering was on.
+
+  * Now "domain name mangling" actually works for clfmerge!
+
+  * Added new clfdomainsplit program.
+
+ -- Russell Coker <russell@coker.com.au>  Mon, 7 May 2001 13:52:41 +0200
+
+logtools (0.06) unstable; urgency=low
+
+  * Add option to change buffer size for clfmerge.
+
+  * Also added an option for "domain name mangling" to clfmerge.  This means
+    that the web logs are expected to have a domain name preceeding the regular
+    CLF format (as suggested in the Apache documentation for mass virtual
+    hosting).
+    See http://www.apache.org/DELETE_ME/vhosts/mass.html .
+
+  * Fixed a bunch of errors in the man pages.
+
+ -- Russell Coker <russell@coker.com.au>  Wed, 2 May 2001 18:11:24 +0200
+
+logtools (0.05) unstable; urgency=low
+
+  * Fixed many trivial bugs.
+
+ -- Russell Coker <russell@coker.com.au>  Tue, 5 Dec 2000 21:28:54 +0100
+
+logtools (0.04) unstable; urgency=low
+
+  * Fixed heaps of bugs and ported to Solaris.
+
+ -- Russell Coker <russell@coker.com.au>  Tue, 14 Nov 2000 21:39:00 +0100
+
+logtools (0.01) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Russell Coker <russell@coker.com.au>  Fri, 25 Aug 2000 19:53:08 +0200
+

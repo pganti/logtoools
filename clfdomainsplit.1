@@ -1,0 +1,75 @@
+.TH "clfdomainsplit" "1" "0.06" "russell@coker.com.au" "1"
+.SH "NAME"
+clfdomainsplit \- split Common\-Log Format web logs based on domain name
+
+.SH "SYNOPSIS"
+.B clfdomainsplit [\-\-help] [\-i input] [\-d defaultfile] [\-c cfg\-file] [\-o directory]
+
+.SH "DESCRIPTION"
+The
+.B clfdomainsplit
+program will split up large CLF format web logs based on domain name.  This is for
+creating separate log analysis passes for each domain hosted on your server.
+
+.SH "OVERVIEW"
+The
+.BR 
+input
+parameter specifies the file to read (default is standard input).
+.P
+The
+.BR 
+defaultfile
+parameter specifies where data goes if it doesn't have a domain (either it has
+an IP address for the server or it doesn't have the server\-name \- the URL is
+relative to the root of the web server only).  The default will be to print them
+on standard error.
+.P
+The
+.BR cfg\-file
+parameter is for specifying the rules for determining what is a different
+domain name.  For example www.coker.com.au belongs in the same file as
+coker.com.au and abc.coker.com.au because domain names ending in .au have three
+major components.  The domain names www.workbenelux.nl and workbenelux.nl
+belong in the same file because domain names ending in .nl have two major
+components (as do .com, and .gov), wheras anything ending in .va belongs to
+the same organization.
+The rules are of the form
+.BR number:pattern
+which lists the number of domain parts which are significant (2 for .com and
+.nl domains, 3 for .au and .uk domains, and 1 for .va.  The pattern is used
+for a simple string comparison, the default will be:
+.TP 
+2:com
+.TP 
+2:nl
+.TP 
+3:au
+.TP 
+3:uk
+.P
+If no config file is specified then it will look for
+.BR /etc/clfdomainsplit.cfg .
+Of course comments start with #.  Also note that
+the first match will be used!
+.P
+The
+.BR directory
+parameter is to specify the location for the files to be created (default is
+the current directory).  I recommend that you use a directory for this and
+nothing else as you never know how many files may be created!
+
+.SH "EXIT STATUS"
+.B 0
+No errors
+.P
+.B 1
+Bad parameters
+
+
+.SH "AUTHOR"
+This program, its manual page, and the Debian package were written by
+Russell Coker <russell@coker.com.au>.
+
+.SH "SEE ALSO"
+.BR clfsplit (1), clfmerge (1)

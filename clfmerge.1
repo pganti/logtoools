@@ -1,0 +1,87 @@
+.TH "clfmerge" "1" "0.06" "Russell Coker <russell@coker.com.au>" "logtools"
+.SH "NAME"
+clfmerge \- merge Common\-Log Format web logs based on time\-stamps
+
+.SH "SYNOPSIS"
+.B clfmerge [\-\-help | \-h] [\-b size] [\-d] [file names]
+
+.SH "DESCRIPTION"
+The
+.B clfmerge
+program is designed to avoid using sort to merge multiple web log files.  Web
+logs for big sites consist of multiple files in the >100M size range from a
+number of machines.  For such files it is not practical to use a program such
+as gnusort to merge the files because the data is not always entirely in order
+(so the merge option of gnusort doesn't work so well), but it is not in random
+order (so doing a complete sort would be a waste).  Also the date field that
+is being sorted on is not particularly easy to specify for gnusort (I have
+seen it done but it was messy).
+.P
+This program is designed to simply and quickly sort multiple large log files
+with no need for temporary storage space or overly large buffers in memory
+(the memory footprint is generally only a few megs).
+
+.SH "OVERVIEW"
+It will take a number (from 0 to n) of file\-names on the command line, it will
+open them for reading and read CLF format web log data from them all.  Lines
+which don't appear to be in CLF format (NB they aren't parsed fully, only
+minimal parsing to determine the date is performed) will be rejected and
+displayed on standard\-error.
+.P
+If zero files are specified then there will be no error, it will just silently
+output nothing, this is for scripts which use the
+.B find
+command to find log files and which can't be counted on to find any log files,
+it saves doing an extra check in your shell scripts.
+.P
+If one file is specified then the data will be read into a 1000 line buffer
+and it will be removed from the buffer (and displayed on standard output) in
+date order.  This is to handle the
+case of web servers which date entries on the connection time but write them
+to the log at completion time and thus generate log files that aren't in
+order (Netscape web server does this \- I haven't checked what other web
+servers do).
+.P
+If more than one file is specified then a line will be read from each file,
+the file that had the earliest time stamp will be read from until it returns a
+time stamp later than one of the other files.  Then the file with the earlier
+time stamp will be read.  With multiple files the buffer size is 1000 lines or
+100 * the number of files (whichever is larger).  When the buffer becomes full
+the first line will be removed and displayed on standard output.
+
+.SH "OPTIONS"
+.TP 
+.B \-b buffer\-size
+Specify the buffer\-size to use, if 0 is specified then it means to disable the
+sliding\-window sorting of the data which improves the speed.
+
+.TP 
+.B \-d
+Set domain\-name mangling to on.  This means that if a line starts with
+.b www.company.com
+as the name of the site that was requested then that would be removed from
+the start of the line and the
+.B "GET /"
+would be changed to
+.B "GET http://www.company.com/"
+which allows programs like Webalizer to produce good graphs for large hosting
+sites.  Also it will make the domain name in lower case.
+
+.SH "EXIT STATUS"
+.B 0
+No errors
+.P
+.B 1
+Bad parameters
+.P
+.B 2
+Can't open one of the specified files
+.P
+.B 3
+Can't write to output
+.SH "AUTHOR"
+This program, its manual page, and the Debian package were written by
+Russell Coker <russell@coker.com.au>.
+
+.SH "SEE ALSO"
+.BR clfsplit (1), clfdomainsplit (1)

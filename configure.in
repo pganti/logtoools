@@ -1,0 +1,30 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(clfmerge.cpp)
+AC_SUBST(version)
+version="0.12a"
+
+AC_ARG_ENABLE(stripping,
+      [  --disable-stripping  disables stripping of installed binaries],
+      STRIPPING=$strippingval, STRIPPING=no)
+AC_SUBST(stripping)
+if [[ ! "$STRIPPING" = "no" ]]; then
+  stripping=""
+else
+  stripping="-s"
+fi
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_CPP
+AC_PROG_INSTALL
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+dnl Checks for library -l socket.
+AC_SUBST(extra_ldflags)
+AC_CHECK_LIB(socket, bind, extra_ldflags="$extra_ldflags -lsocket -lnsl")
+
+AC_OUTPUT(Makefile sun/pkginfo logtools.h)

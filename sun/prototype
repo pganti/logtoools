@@ -1,0 +1,9 @@
+i pkginfo
+f none /usr/bin/clfmerge 0755 root root
+f none /usr/bin/logprn 0755 root root
+f none /usr/bin/clfsplit 0755 root root
+f none /usr/bin/funnel 0755 root root
+f none /usr/share/man/man1/clfmerge.1 0644 root root
+f none /usr/share/man/man1/logprn.1 0644 root root
+f none /usr/share/man/man1/clfsplit.1 0644 root root
+f none /usr/share/man/man1/funnel.1 0644 root root

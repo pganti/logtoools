@@ -1,0 +1,52 @@
+.TH "logprn" "1" "0.06" "Russell Coker <russell@coker.com.au>" "logtools"
+.SH "NAME"
+logprn \- merge Common\-Log Format web logs based on time\-stamps
+
+.SH "SYNOPSIS"
+.B logprn logfile idle\-time[:max\-wait] command
+
+.SH "DESCRIPTION"
+The
+.B logprn
+program is designed to print new data that is appended to log files.  It will
+wait until a specified amount of time has elapsed since the last write to the
+file before printing the data.  It will print the data by pipeing it to a
+specified command.  The command will be run by popen(3) so the usual shell
+commands will operate (whether this is a bug or a feature is a matter of
+opinion).
+
+.SH "OPTIONS"
+.TP 
+.B logfile
+specifies a file to read data from.  It should be a regular file not a pipe,
+device, or anything else.
+.TP 
+.B idle\-time
+.TP 
+.B max\-wait
+.TP 
+.B command
+
+.SH "EXIT STATUS"
+.B 0
+Never happens, this program will run forever.
+.P
+.B 1
+Bad command\-line parameters or couldn't stat the log file on startup \- couldn't start the program.
+.P
+.B 2
+File disappeared or became unreadable at run\-time.
+.P
+.B 3
+Can't run the specified command.
+.SH "AUTHOR"
+This program, its manual page, and the Debian package were written by
+Russell Coker <russell@coker.com.au>.
+
+.SH "BUGS"
+Uses
+.B popen (3)
+but I consider this a feature not a bug.
+
+.SH "SEE ALSO"
+.BR popen (3)

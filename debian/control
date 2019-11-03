@@ -1,0 +1,22 @@
+Source: logtools
+Section: admin
+Priority: optional
+Maintainer: Russell Coker <russell@coker.com.au>
+Standards-Version: 3.1.1
+Build-Depends: debhelper
+
+Package: logtools
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Russell's misc tools for managing log files.
+ clfmerge - merge common-log-format web logs in order without sorting (good for
+ when you have a gig of logs).
+ .
+ logprn - like "tail -f" but after a specified time period of inactivity will
+ run a program (such as lpr) and pipe the new data to it)
+ .
+ funnel - pipe one stream of data to several files or processes.
+ .
+ clfsplit - split CLF format web logs by client IP address.
+ .
+ clfdomainsplit - split CLF logs by server domain.

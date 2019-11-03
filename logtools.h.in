@@ -1,0 +1,20 @@
+#ifndef LOGTOOLS_H
+#define LOGTOOLS_H
+
+#define VERSION "@version@"
+
+typedef const char * PCCHAR;
+typedef char * PCHAR;
+typedef PCHAR const CPCHAR;
+typedef PCCHAR const CPCCHAR;
+typedef void * PVOID;
+typedef PVOID const CPVOID;
+typedef const CPVOID CPCVOID;
+typedef FILE *PFILE;
+
+#define ERR_PARAM 1
+#define ERR_INPUT 2
+#define ERR_OUTPUT 3
+#define ERR_SPEC 4
+
+#endif

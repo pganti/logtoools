@@ -1,0 +1,54 @@
+.TH "funnel" "1" "0.06" "Russell Coker <russell@coker.com.au>" "logtools"
+.SH "NAME"
+funnel \- split one pipe stream to one or more files or programs
+
+.SH "SYNOPSIS"
+.B funnel [|] [>[>]file] [|process]
+
+.SH "DESCRIPTION"
+The
+.B funnel
+program will read data from standard input and write it to several output
+streams.
+.P
+The
+.B |
+symbol means to copy standard input to standard output.
+.P
+The
+.B >
+symbol means that a file name immediately follows with no separating spaces,
+the file will be truncated if it exists or created if it doesn't. The
+.B >>
+means that the file is to be appended to if it exists.
+.P
+A 
+.B |
+symbol followed immediately by text indicates a command that is to be run by
+system() and will have all input piped to it.
+
+
+.SH "EXIT STATUS"
+.B  0
+No errors
+.P
+.B 1
+Error opening input
+.P
+Other errors are 100 + number of commands or files that fail
+.SH "AUTHOR"
+This program, its manual page, and the Debian package were written by
+Russell Coker <russell@coker.com.au>.
+
+.SH "FEATURES"
+Uses
+.B popen (3)
+for output so that shell expansion gets performed.  If you want such shell
+expansion then you must ensure that you quote the parameters correctly so that
+they get expanded by
+.B popen (3)
+not the shell that calls
+.B funnel.
+
+.SH "SEE ALSO"
+.BR popen (3)
